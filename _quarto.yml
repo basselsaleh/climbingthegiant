@@ -1,0 +1,21 @@
+project:
+  type: website
+
+website:
+  title: "climbingthegiant"
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/basselsaleh
+      - icon: linkedin
+        href: https://www.linkedin.com/in/bassel-saleh-5a653bb6/
+      - icon: twitter
+        href: https://twitter.com/mrbassoule
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+
+
+
