@@ -18,6 +18,6 @@ But who am I anyway? My name is Bassel Saleh, and I'm currently a PhD student in
 
 Want more info about me? Check out the [About Me](/about.qmd) page.
 
-Curious about the name *Climbing the Giant*? I explain it all in one of my first posts, [Not Knowing](/posts/not-knowing/2021-05-09-not-knowing.md).
+Curious about the name *Climbing the Giant*? I explain it all in my first post, [Not Knowing](/posts/not-knowing/2021-05-09-not-knowing.md).
 
 # Posts
