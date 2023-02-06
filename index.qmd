@@ -1,5 +1,5 @@
 ---
-title: "climbingthegiant"
+title: "Climbing the Giant"
 listing:
   contents: posts
   sort: "date desc"
