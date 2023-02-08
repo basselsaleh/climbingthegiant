@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Bassel Saleh">
+<meta name="dcterms.date" content="2023-02-07">
+<meta name="description" content="The dumbest chat bot you’ll see this year.">
+
+<title>climbing the giant - CatGPT: Part 1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../..//images/climber.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">climbing the giant</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/basselsaleh"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/bassel-saleh-5a653bb6/"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/mrbassoule"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">CatGPT: Part 1</h1>
+                  <div>
+        <div class="description">
+          The dumbest chat bot you’ll see this year.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Coding Project</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Bassel Saleh </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 7, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="my-pet-grimalkin" class="level2">
+<h2 class="anchored" data-anchor-id="my-pet-grimalkin">My Pet Grimalkin</h2>
+<p>Well, I’m back. And after nearly two years of no activity on this blog, what incredible spectacle do I have prepared for you, my irrationally loyal reader? Introducing <strong>CatGPT</strong>, the <strong>Cat</strong>enated <strong>G</strong>rimalkin <strong>P</strong>rogram <strong>T</strong>alker. As stupid as it sounds, I spent <em>a lot</em> of time with the thesaurus to come up with that name, so please let me have this. Naming things is <a href="../../posts/2021-05-09-not-knowing/2021-05-09-not-knowing.html">hard</a>.</p>
+<p>CatGPT is a simple AI chat bot that uses Markov chain-based text prediction to generate responses, and it seems to have suspiciously specific knowledge about just one thing… cats. So like, do you get it now? <a href="https://en.wikipedia.org/wiki/Grimalkin">Grimalkin</a> is an old word for cat, you see. And if you think that’s silly then <em>you</em> try googling “synonyms for cat that start with G, P, or T” and see if you can do better. On second thought, you might want to skip the “P” search. Anyway, <em>catenate</em> is a word containing “cat” that also happens to mean “to link together”, which fits well with the Markov chain theme, so yea, this name is actually very clever, and it’s <em>you</em> who’s spent too much time thinking about it.</p>
+<p>Where was I? Oh yes, CatGPT isn’t just a blatant attempt to capitalize on the current popularity of some <a href="https://openai.com/blog/chatgpt/"><em>other</em></a> chat bots out there, it’s one that we’re going to build together! I guess to be more clear, this is a tutorial where I’ll walk you through how to build a text generation tool using simple Markov chains and dress it up a bit to be something we can talk to. Obviously we won’t be blowing any <a href="https://en.wikipedia.org/wiki/Language_model#Notable_language_models">LLMs</a> out of the water here, but hopefully we’ll learn some things along the way about probability, natural language, and Python development.</p>
+</section>
+<section id="markov-chains-and-language" class="level2">
+<h2 class="anchored" data-anchor-id="markov-chains-and-language">Markov chains and language</h2>
+<p>In a fairly abstract sense, text generation comes down to answering the question: how do I decide what to say next based on what was just said? Language, after all, is not random; it contains structure (grammar, syntax, diction) that emerges as <em>correlations</em> in the text. Certain characters are more likely to follow certain other characters, which are more likely to be arranged in certain orders and appear in certain places, and so on. This correlation structure is what allows language to carry information, such that the reader can parse that information using his or her own understanding of the structure. In general, natural human language is messy and imprecise, and the <em>actual</em> information content of a piece of text is highly complicated, involving correlations that aren’t necessarily local. One of the things that makes C<strong>h</strong>atGPT so powerful is its ability to capture and reproduce these correlations at many scales, allowing for text that feels holistic and sensible from start to finish.</p>
+<p>We, however, will start from a humble place and focus on the kind of text generation where what we say will depend <em>only</em> on what was <em>just</em> said, roughly speaking. It is precisely this property that will make our model <a href="https://en.wikipedia.org/wiki/Markov_chain">Markovian</a>, i.e.&nbsp;the probability that we produce a character <span class="math inline">\(c\)</span> will depend only on the previous <span class="math inline">\(k\)</span> characters in the text. You might think that we need to restrict ourselves to looking at only one previous character to be truly Markovian, but it turns out the number of characters doesn’t really matter (in fact, we could do the same thing with whole words or even more abstract “tokens”, if our source text were rich enough). What matters is that our next character is influenced by <em>a</em> sequence of previous ones, not that sequence <em>and</em> some other sequence from a couple paragraphs back, for example. In this way, one sequence influences the next sequence, which influences the next sequence, and so on such that all the sequences of length <span class="math inline">\(k\)</span> are probabilistically linked together, which is what makes this a Markov <em>chain</em>.</p>
+<p>So, we’ll call <span class="math inline">\(k\)</span> the <em>kernel size</em> and call the output (single character) of our model <span class="math inline">\(y\)</span>. Then, given an input <span class="math inline">\(x\)</span> that is a string of <span class="math inline">\(k\)</span> characters, we want to compute the probability <span class="math display">\[ P(y = c | x)\quad \forall c\in\mathcal{A} \]</span> Here, <span class="math inline">\(\mathcal{A}\)</span> is the <em>alphabet</em> for our model, the set of all the possible characters we’re allowed to produce. In our case this happens to also be all the unique characters that appear in our source text. Once we have this probability in hand, we’re golden. For a given <span class="math inline">\(x\)</span>, we have a probability <em>distribution</em> over all possible choices of <span class="math inline">\(c\)</span>. All we need to do is pick a character at random according to that probability, spit it out, and repeat.</p>
+<p>The trick, of course, is that we need to somehow compute this probability. In our case, this will be done by simply counting occurences in the original text, such that our generated text will have the same correlation structure as the source, for whatever <span class="math inline">\(k\)</span> is pre-selected.</p>
+</section>
+<section id="developing-the-code" class="level2">
+<h2 class="anchored" data-anchor-id="developing-the-code">Developing the code</h2>
+<p>For this project, we’re going to use Python (for now). It’s worth noting that there are powerful tools out there for manipulating text and processing natural language, such as <a href="https://www.nltk.org/">NLTK</a>, but we’re going to <em>mostly</em> avoid those for this project and do things ourselves.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> We’ll start by building up the three main ingredients of our model:</p>
+<ol type="1">
+<li><a href="#building-the-distribution">Building the probability distribution from the source text</a></li>
+<li><a href="#generating-new-text">Generating new text</a></li>
+<li><a href="#making-it-interactive">Making it interactive</a></li>
+</ol>
+<section id="building-the-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="building-the-distribution">Building the distribution</h3>
+<p>There are different ways to go about this, but the first idea I had turned out to be easy to implement and perfectly adequate in efficiency. The idea is to use nested dictionaries to create a lookup table for character frequencies. The outer dictionary’s keys will be sequences of <span class="math inline">\(k\)</span> characters, each one pointing to an inner dictionary of characters pointing to their frequencies.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_lookup(source_text, k):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    lookup <span class="op">=</span> <span class="bu">dict</span>()                     <span class="co"># the outer dictionary</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i,_ <span class="kw">in</span> <span class="bu">enumerate</span>(source_text):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i<span class="op">+</span>k <span class="op">&gt;=</span> <span class="bu">len</span>(source_text):     <span class="co"># make sure you don't go out of bounds</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> source_text[i:i<span class="op">+</span>k]          <span class="co"># x, the current sequence of k chars</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> source_text[i<span class="op">+</span>k]            <span class="co"># y, the next char that appears</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> x <span class="kw">not</span> <span class="kw">in</span> lookup:             <span class="co"># if this is the first time we've seen x, add it</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>            lookup[x] <span class="op">=</span> {y: <span class="dv">1</span>}</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> y <span class="kw">not</span> <span class="kw">in</span> lookup[x]:      <span class="co"># count the number of times y appears after x</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                lookup[x][y] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                lookup[x][y] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> lookup</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The loop creates a sliding window, our <span class="math inline">\(k\)</span>-sized kernel, that scans over the source text and counts up the number of times different characters follow. Now, when we access this <code>lookup</code> dictionary with some input <code>x</code>, what we get back is the probability distribution we were after. Of course, really what we get is a distribution of frequencies, and we’d need to divide these by the total number of occurences to get probabilities, but this is an unnecessary step, as we’ll see later. Python’s <code>random.choices</code> function allows us to use the raw frequencies as weights to get the desired result.</p>
+</section>
+<section id="generating-new-text" class="level3">
+<h3 class="anchored" data-anchor-id="generating-new-text">Generating new text</h3>
+<p>It almost seems too good to be true, but generating new text is similarly pretty straightforward. What we need is a desired length for the new text, a seed from which to start adding characters, and the lookup table that we built from before. We just pick new characters from the lookup inner dictionary weighted by their frequencies (which are the values in that dictionary).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_text(lookup, k, length, seed):</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> seed</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(k, length):</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> text[i<span class="op">-</span>k:]                      <span class="co"># current input, starting with seed</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        chars <span class="op">=</span> <span class="bu">list</span>(lookup[x].keys())      <span class="co"># the chars to choose from</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        weights <span class="op">=</span> <span class="bu">list</span>(lookup[x].values())  <span class="co"># the frequencies with which those chars appeared in source</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        next_char <span class="op">=</span> random.choices(chars, weights<span class="op">=</span>weights, k<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        text <span class="op">+=</span> next_char</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>It’s really that simple. By the way, <code>random.choices</code> returns a list, so with <code>k=1</code> we’re telling it to return one character, but we still need to grab the <span class="math inline">\(0\)</span>th element to access it.</p>
+<p>Now would be a great time to run a little test to see if things work. For now, let’s take just the first paragraph from the Wikipedia page for cat and use that as source text.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>source_text <span class="op">=</span> <span class="st">'The cat (Felis catus) is a domestic species of small carnivorous mammal. It is the only domesticated species in the family Felidae and is commonly referred to as the domestic cat or house cat to distinguish it from the wild members of the family. Cats are commonly kept as house pets but can also be farm cats or feral cats; the feral cat ranges freely and avoids human contact. Domestic cats are valued by humans for companionship and their ability to kill rodents. About 60 cat breeds are recognized by various cat registries.'</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>lookup <span class="op">=</span> build_lookup(source_text, k)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> source_text[:k]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>new_text <span class="op">=</span> generate_text(lookup, k<span class="op">=</span>k, length<span class="op">=</span><span class="dv">100</span>, seed<span class="op">=</span>seed)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(new_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Executing the above (<span class="math inline">\(k=1\)</span>) gave me:</p>
+<blockquote class="blockquote">
+<p>Thed t bus famo inivats It dond avavamby mmis. acon by 60 f tis hegicon tst wie ican d t omarouivous</p>
+</blockquote>
+<p>If we crank <span class="math inline">\(k\)</span> up a bit, to say <span class="math inline">\(k=5\)</span>, we get something a little more English sounding:</p>
+<blockquote class="blockquote">
+<p>The cat ranges freely and their ability to kill rodents. About 60 cat ranges freely and their abilit</p>
+</blockquote>
+<p>Our bot seems a bit confused and is repeating itself, but that’s just because of how small our source text is. If you’d like, you can throw an even shorter source text in there, like “hello there”, and print out the lookup table to convince yourself of what it’s doing. This can be useful for debugging.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+</section>
+<section id="making-it-interactive" class="level3">
+<h3 class="anchored" data-anchor-id="making-it-interactive">Making it interactive</h3>
+<p>As a final step, we’d like to make this text generation code something we can actually interact with. In the spirit of mimicking ChatGPT, we envision a setup where we can ask the bot something, and have its response in <em>some</em> way incporporate what we asked. Furthermore, we’d like to rinse and repeat this to have an ongoing conversation.</p>
+<p>Let me be clear: we’re not getting fancy here. The beloved CatGPT that we’re building is… special. The goal here is to be a bit goofy, so we’re going to make this interactive in quite a dumb way. But more on that later.</p>
+<p>First, let’s fill CatGPT’s brain with a lot more info, specifically all the Wikipedia pages in the category <a href="https://en.wikipedia.org/wiki/Category:Cats">“Cats”</a>. The general and proper way to scrape data from the web would be to use a combination of the <code>requests</code> and <code>beautifulsoup</code> packages, but we can get away with even more simplicity by using the <code>wikipediaapi</code> package. If we want to extend our bot to learn from other online sources in the future, we’d need to go the former route.</p>
+<p>So let’s write a function that takes a category name and grabs the content for all the pages that are in that category.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wikipediaapi</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_wiki(category):</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    wiki <span class="op">=</span> wikipediaapi.Wikipedia(<span class="st">'en'</span>, extract_format<span class="op">=</span>wikipediaapi.ExtractFormat.WIKI)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    cat_page <span class="op">=</span> wiki.page(category)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    article_names <span class="op">=</span> [p <span class="cf">for</span> p <span class="kw">in</span> cat_page.categorymembers.keys() <span class="cf">if</span> <span class="st">':'</span> <span class="kw">not</span> <span class="kw">in</span> p]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    content <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> article <span class="kw">in</span> article_names:</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        page <span class="op">=</span> wiki.page(article)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        page_content <span class="op">=</span> page.text</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        content <span class="op">+=</span> page_content</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> content.replace(<span class="st">'</span><span class="ch">\n</span><span class="st">'</span>, <span class="st">' '</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The one subtlety to point out here is in the line <code>article_names = [p for p in cat_page.categorymembers.keys() if ':' not in p]</code>. We’re excluding page names that contain “:” in them because we don’t want to deal with the recursive nature of Wikipedia categories. To keep things simple, we’re only going to scrape the pages that sit <em>directly</em> in the “Cats” category, and this line of code seems to do the trick.</p>
+<p>Now the final step. We need to:</p>
+<ol type="1">
+<li>Build our lookup table using the source text scraped from the Wikipedia articles</li>
+<li>Ask the user for some input</li>
+<li>Parse the input to extract “keywords” to then search for in the source text</li>
+<li>Randomly select a <span class="math inline">\(k\)</span> sized seed from the text based on this keyword search</li>
+<li>Generate a response using that seed</li>
+<li>Repeat</li>
+</ol>
+<p>Ok maybe I got a bit ahead of myself when I said “final step”. Steps 3 and 4 here seem like a head scratcher, so let’s spell out a little more clearly what they mean. Again, I want the user’s input to <em>somehow</em> influence the response by CatGPT, and the simplest way I could think to do this was to search the source text for instances matching words in the user’s input and use that as a seed to generate the response.</p>
+<p>Two issues immediately arise from this approach. First, we don’t want to waste our time looking for common words and articles, so we’re going to use a dictionary of <code>stopwords</code> from <code>nltk.corpus</code> to filter out such words, leaving us with more interesting “keywords”. Second, we need our seed to be of length <span class="math inline">\(k\)</span>, so some padding around the keywords will be needed to make sure whatever sequences we find are the correct length. Then we’ll just pick one at random and go from there.</p>
+<p>Finally, the code to do all this is below. There are some small tricks here and there, like using regex and string translation to filter out punctuation, prepending our keywords with spaces to avoid finding matches in the middle of words, and some others. But instead of going through every trick, I encourage you to take this code and play around with it yourself to uncover all its quirks. Again, for a project like this it is absolutely necessary to continually unit test, try your best to break it with nontrivial inputs, and generally mess around with it until you can shake all the bugs out.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_catGPT():</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># load text from all the Wikipedia pages on cats</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    source_text <span class="op">=</span> load_wiki(<span class="st">'Category:Cats'</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># use nltk to download the set of stopwords</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    nltk.download(<span class="st">'stopwords'</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    stops <span class="op">=</span> <span class="bu">set</span>(stopwords.words(<span class="st">'english'</span>))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># set kernel size. I'm a fan of k = 10</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    k <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># build probability distribution as lookup table</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    lookup <span class="op">=</span> build_lookup(source_text, k)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">Hello, my name is CatGPT. What can I help you with today?'</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># request user input, and exit if the user says goodbye</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        input_text <span class="op">=</span> <span class="bu">input</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">&gt; '</span>)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> input_text.lower() <span class="op">==</span> <span class="st">'goodbye'</span>:</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># get a list of the user's words, ignoring punctuation, then filter out the stopwords</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        words <span class="op">=</span> re.findall(<span class="vs">r"[\w']+|[.,!?;]"</span>, </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            input_text.lower().translate(<span class="bu">str</span>.maketrans(<span class="st">''</span>, <span class="st">''</span>, string.punctuation)))</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        keywords <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> w: <span class="kw">not</span> w <span class="kw">in</span> stops, words))</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># for each keyword, find matches in the text and pad them to be of length k</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># add them to a list of potential seeds</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        seeds <span class="op">=</span> []</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> w <span class="kw">in</span> keywords:</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> match <span class="kw">in</span> re.finditer(<span class="st">' '</span> <span class="op">+</span> w, source_text):</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>                s <span class="op">=</span> match.start() <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>                e <span class="op">=</span> match.end()</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>                padded <span class="op">=</span> source_text[s:e]</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="bu">len</span>(padded) <span class="op">&gt;</span> k:</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>                    seeds.append(padded[:k])</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>                <span class="cf">else</span>:</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">while</span> <span class="bu">len</span>(padded) <span class="op">&lt;</span> k:</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>                        e <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>                        padded <span class="op">=</span> source_text[s:e]</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>                    </span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>                    seeds.append(padded)</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if for some reason no match was found, set the seed as start of text</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> seeds:</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>            seed <span class="op">=</span> source_text[<span class="dv">0</span>:k]</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>            seed <span class="op">=</span> random.choice(seeds)</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>        <span class="co"># generate a response of length 500 (or whatever you want)</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> generate_text(lookup, k, length<span class="op">=</span><span class="dv">500</span>, seed<span class="op">=</span>seed)</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>        <span class="co"># do some post-processing to make sure the response ends with a period and starts capitalized</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>        last_period <span class="op">=</span> response.rfind(<span class="st">'.'</span>)</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> last_period <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>:</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>            last_period <span class="op">=</span> <span class="bu">len</span>(response)</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>            response <span class="op">+=</span> <span class="st">'.'</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> response[<span class="dv">0</span>].upper() <span class="op">+</span> response[<span class="dv">1</span>:last_period<span class="op">+</span><span class="dv">1</span>]</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">'</span> <span class="op">+</span> response)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="a-conversation-with-catgpt" class="level2">
+<h2 class="anchored" data-anchor-id="a-conversation-with-catgpt">A conversation with CatGPT</h2>
+<p>The following is a conversation I had with CatGPT. Enjoy.</p>
+<div class="conversation">
+<blockquote class="blockquote">
+<p>Hello, my name is CatGPT. What can I help you with today?</p>
+</blockquote>
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<p>Hi CatGPT. Do you have any cat fun facts for me?</p>
+</blockquote>
+</blockquote>
+<blockquote class="blockquote">
+<p>Cats and free-ranging domestic and wild cats descended from domestic cat with a large area entirely unsuitable for breeding have red eyes. The point gene allele is a single cat found with intact males, while spayed female cat”, also used to call a cat. The myth is attributed to the slaughter.</p>
+</blockquote>
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<p>Jesus, that got kind of dark at the end</p>
+</blockquote>
+</blockquote>
+<blockquote class="blockquote">
+<p>Darkest of all the boarding catteries. In 2007 market surveys showed that 67% of the mice killed by feral cats may chase. Reproduction. These lineages include pain and swelling around the mid 950s BC onwards. At the times at which a kitten becomes difficulties in distinguishable from domesticated cats. Along with rabbits, some sea birds, and sheep, form the entire growth cycle of contraction and establishment, but the current wildcat population. There are various methods for training the cat.</p>
+</blockquote>
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<p>I didn’t really understand most of that, but yes training a cat is what I want! I’d love to train my cat</p>
+</blockquote>
+</blockquote>
+<blockquote class="blockquote">
+<p>Cats. Young orphaned and how long they were embalmed, coffined and buried in cat cemeteries for mummies offered to Bastet.In the mid 19th century. It was suggested that the earth was experience poor growth and can result in retinal degenerations could reach them only with a small cat species, a factor that has been identified as a domestic cats (mostly unowned) are the top human-caused threat to wildlife, transmission of illness.</p>
+</blockquote>
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<p>Oh, I see. That’s pretty bleak. Also, I’m beginning to suspect you’re not really that smart</p>
+</blockquote>
+</blockquote>
+<blockquote class="blockquote">
+<p>Also neurological cell types. White cats and other animal welfare. The cat will produce black eumelanin based) fur, caused by the abandonment of pets. The usefulness of TNR are often funded by big businesses to combat the city’s cemetery of Beni Hasan necropoli were reused as cemeteries at the locus. Other genes white markings allow point coloration are more frequent in the palace in order to optimize the link between two of the remote village is accessible from Houtong Station of the cat gap.</p>
+</blockquote>
+</div>
+</section>
+<section id="closing-remarks" class="level2">
+<h2 class="anchored" data-anchor-id="closing-remarks">Closing remarks</h2>
+<p>Well, this has been genuinely fun. Our little chat bot may not be the sharpest tool in the shed, but he’s certainly… something. A bit darker than I expected. Anyway, thanks for getting through this with me, if you’ve made it this far. Next time around we’ll take this one step further, by building a <a href="https://flask.palletsprojects.com/en/2.2.x/">Flask</a> web app for our beloved CatGPT, hosting it using <a href="https://cloud.google.com/free/">Google Cloud</a>’s App Engine, and building a JavaScript frontend so that all can enjoy his depressing cat facts on this site. It’s gonna be fun.</p>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>The official reason for this is so we can get our hands dirty and also keep things transparent, but it is also true that I’m just not an expert on NLP and wasn’t aware of these tools when I set out to do this. Regardless, for our relatively simple application we really don’t need anything too fancy.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>I’m leaving out a lot of the steps that it took to actually get all this working. As in all coding projects, periodic, systematic testing is key to finding bugs and catching nasty corner cases. If I chronicled all of that here this post would never end.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
