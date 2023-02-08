@@ -2,14 +2,14 @@
 aliases:
 - /markdown/2021/05/09/not-knowing
 categories:
-- explainers
+- Explainer
 date: '2021-05-09'
 description: "\"They say great science is built on the shoulders of giants. Not here.
   At Aperture, we do all our science from scratch. No hand holding.\" - Cave Johnson"
 layout: post
 title: Not Knowing
 toc: false
-
+author: "Bassel Saleh"
 ---
 
 ## The Giant's Feet
