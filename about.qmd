@@ -17,7 +17,7 @@ about:
 
 My name is Bassel Saleh, I'm 26 years old living in Austin, Texas, and I'm currently pursuing a Ph.D. in Computational Science, Engineering, and Mathematics (CSEM) at the University of Texas. I am in my fifth (and hopefully final) year in the program, and as explained on the [home](/index.html) page, I created this blog to synthesize some of the things I've learned and work on developing a voice that is both technical and personal.
 
-I received two Bachelors of Science, one in physics and the other in computer science, also from the University of Texas. I earned a Master's degree in CSEM after completing the coursework for my PhD program.
+I received two Bachelors of Science, one in physics and the other in computer science, also from the University of Texas in 2018. I earned a Master's degree in CSEM in 2020.
 
 My full CV can be found [here](/files/Bassel_Saleh_CV_Jan2023.pdf).
 
@@ -25,9 +25,9 @@ My full CV can be found [here](/files/Bassel_Saleh_CV_Jan2023.pdf).
 
 ## Research Interests
 
-My interests lie in the space where computation meets interesting physics. A strong theme in my research has been quantitification of uncertainty, especially as it relates to solving Bayesian inference problems with expensive or biased forward models. My main line of research, that which pertains to my dissertation, is about solving the inference problem in [gravitational wave data analysis](https://link.springer.com/article/10.12942/lrr-2012-4). In short, I get to study the astrophysics of colliding black holes in extreme gravitational environments, while focusing on the general challenges of performing numerical inference, namely the problem of sampling from probability distributions in high dimensions.
+My interests lie in the space where computation meets interesting physics. I work primarily on quantitification of uncertainty, especially as it relates to solving Bayesian inference problems with expensive or otherwise complex forward models. For my dissertation research, I've worked on solving the inference problem in [gravitational wave data analysis](https://link.springer.com/article/10.12942/lrr-2012-4). In short, I study the astrophysics of colliding black holes in extreme gravitational environments, while focusing on the general challenges of performing numerical inference, namely the problem of sampling from probability distributions in high dimensions.
 
-I also work on [scientific machine learning](https://oden.utexas.edu/research/crosscutting-research-areas/scientific-machine-learning/). Data-driven solutions to modeling complex systems in physics and engineering are gaining in popularity, largely because of how computationally efficient these methods can be. However, in critical systems (e.g. jet plane autopilot, nuclear reactor management, extreme weather prediction), the consequences of innacurate or untrustworthy model predictions can be catastrophic, so proper quantification of uncertainty is a necessity. This is the second primarily line of my research.
+I also work on [scientific machine learning](https://oden.utexas.edu/research/crosscutting-research-areas/scientific-machine-learning/). Data-driven solutions to modeling complex systems in physics and engineering are a very active area of research, largely because of how computationally efficient these methods can be. However, in critical systems (e.g. jet plane autopilot, nuclear reactor management, extreme weather prediction), the consequences of innacurate or untrustworthy model predictions can be catastrophic, so proper quantification of uncertainty is a necessity. This is the second primarily line of my research.
 
 ## Personal Interests
 
