@@ -2,8 +2,9 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/physics-time-loops/index.html",
       "/posts/catGPT/index.html",
-      "/posts/2021-05-09-not-knowing/2021-05-09-not-knowing.html"
+      "/posts/not-knowing/2021-05-09-not-knowing.html"
     ]
   }
 ]
