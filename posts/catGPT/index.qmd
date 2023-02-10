@@ -248,4 +248,8 @@ The following is a conversation I had with CatGPT. Enjoy.
 
 ## Closing remarks
 
-Well, this has been genuinely fun. Our little chat bot may not be the sharpest tool in the shed, but he's certainly... something. A bit darker than I expected. Anyway, thanks for getting through this with me, if you've made it this far. Next time around we'll take this one step further, by building a [Flask](https://flask.palletsprojects.com/en/2.2.x/) web app for our beloved CatGPT, hosting it using [Google Cloud](https://cloud.google.com/free/)'s App Engine, and building a JavaScript frontend so that all can enjoy his depressing cat facts on this site. It's gonna be fun.
+Well, this has been genuinely fun. Our little chat bot may not be the sharpest tool in the shed, but he's certainly... something. A bit darker in tone than I expected.
+
+The code for this project can be found on my Github [here](https://github.com/basselsaleh/text_generation).
+
+Thanks for getting through this with me, if you've made it this far. Next time around we'll take this one step further, by building a [Flask](https://flask.palletsprojects.com/en/2.2.x/) web app for our beloved CatGPT, hosting it using [Google Cloud](https://cloud.google.com/free/)'s App Engine, and building a JavaScript frontend so that all can enjoy his depressing cat facts on this site. It's gonna be fun.
