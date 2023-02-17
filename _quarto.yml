@@ -5,6 +5,7 @@ website:
   title: "climbing the giant"
   favicon: /images/climber.png
   navbar:
+    background: dark
     right:
       - about.qmd
       - icon: github
