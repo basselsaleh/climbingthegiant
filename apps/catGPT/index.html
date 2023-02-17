@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> CatGPT </title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+
+    <body onload="welcomeMessage()">
+        <h1> Welcome to CatGPT </h1>
+        A simple and silly Markov-chain based cat-obsessed chat bot, created by Bassel Saleh.<br>
+        <a href="https://climbingthegiant.com/posts/catGPT/">Click here for more info</a>
+
+        <div class="chat-container">
+            <div class="chat" id="chat">
+                <!-- <div class="message from-catgpt">
+                    Hello th— I mean... meow. My name is CatGPT. What can I help you with today?
+                </div> -->
+            </div>
+            <div class="message user-input">
+                <form>
+                    <label for="input_text"></label>
+                    <input type="text" id="input_text" name="input_text">
+                    <!-- <button type="button" onclick="getResponse()" id="submit"></button> -->
+                </form>
+            </div>
+        </div>
+
+        <script>
+            var input = document.getElementById("input_text");
+            input.addEventListener("keypress", function(event) {
+                if(event.key === "Enter") {
+                    event.preventDefault();
+                    // document.getElementById("submit").click();
+                    getResponse();
+                    input.value = "";
+                }
+            })
+
+            function getResponse() {
+                const inputText = document.getElementById("input_text").value;
+                addMessage("user", inputText);
+
+                // fetch("http://localhost:6969/generate-response", {
+                fetch("https://pure-meridian-378121.uc.r.appspot.com/generate-response", {
+                    method: "POST",
+                    body: inputText
+                })
+                .then(response => response.text())
+                .then(data => {
+                    // document.getElementById("response_text").innerHTML = data;
+                    addMessage("catgpt", data);
+                });
+            }
+
+            async function addMessage(from, text) {
+                var messageDiv = document.createElement("div");
+                messageDiv.className = "message " + (from === "user" ? "from-user" : "from-catgpt");
+                var chatDiv = document.getElementById("chat");
+                // chatDiv.appendChild(messageDiv);
+                chatDiv.insertBefore(messageDiv, chatDiv.firstChild)
+
+                // if text is from bot, animate it
+                if(from === "catgpt") {
+                    var speed = 10; // how long to wait between chars in ms
+                    for(var i=0; i < text.length; i++) {
+                        await new Promise(r => setTimeout(r, speed))
+                        messageDiv.innerHTML += text.charAt(i);
+                    }
+                } else {
+                    messageDiv.innerHTML = text;
+                }
+            }
+
+            function welcomeMessage() {
+                const welcomeText = "Hello th— I mean... meow. My name is CatGPT. What can I help you with today?";
+                addMessage("catgpt", welcomeText);
+            }
+        </script>
+    </body>
+</html>
