@@ -1,0 +1,108 @@
+---
+title: "CatGPT: Part 2"
+description: "Learn how to deploy a web app with Flask, Google App Engine, and a JavaScript frontend."
+author: "Bassel Saleh"
+date: "2023-03-09"
+categories: Coding Project
+---
+
+## It's live!
+
+Last month I created a little chatbot named [CatGPT](/posts/catGPT/index.qmd), the heart of which was a goofy and remarkably easy-to-implement text generation tool using Markov chains built from Wikipedia articles about cats. I made it slightly interactive by having its responses seeded by random keywords from a user's input query, and the result was a funny, incoherent, and at-times disturbingly dark chat companion. The whole exercise was an excuse to learn a thing or two about language models and the role of probability in text generation, but I thought to myself: why stop there? I wanted to turn CatGPT into an actual web app, one I could host on a cloud service and make an interactive frontend for all to use. I've never done any web development before (at least not for real for real), so I thought, how hard could it be?
+
+Well nearly three weeks of headaches later, I finally have this simple app functional and working. It's hosted on Google Cloud's App Engine, using the Flask framework for the Python backend (built on what we wrote last time) and has an animated chat interface written in JavaScript/HTML/CSS for the frontend. So go ahead and click the link below to check it out:
+
+### <a href="https://tinyurl.com/catgpt-app" target="_blank">Try CatGPT</a>
+
+In the rest of this article, I'll walk you through the steps it took to build this app and the lessons I learned about frontend development, cloud services, and motherf****ing HTTP request logs. Enjoy.
+
+#### Note
+It was recently brought to my attention that mine is not the only CatGPT out there. I guess the name wasn't so clever after all. Check out [Wouter van Dijke's version](https://catgpt.wvd.io/) and see if you can spot the creative differences. Also there's [this one](https://www.cat-gpt.com/) but I can't seem to find any info about who made it.
+
+## The Backend: Using the Flask Framework
+
+The first thing we're going to do is take the three functions we wrote last time, `load_wiki`, `build_lookup`, and `generate_text`, and put them in a file called `catgpt_utils.py`. If we wanted to be more object oriented and please our high school computer science teachers, we could create a class (perhaps called `Catgpt_Bot`) and make these functions methods of the class. But between you and me, for a project this size, just leaving them as naked functions is fine. It's not the most elegant solution, especially since we do have some shared data between the functions, but forgive me, I've worked on this too long and just want it done.
+
+As a refresher, `load_wiki` takes in a Wikipedia category and scrapes the content from all the articles sitting directly in that category; `build_lookup` takes some source text and a kernel size and creates a lookup table, implemented as nested dictionaries, to track frequencies of character occurrences; and `generate_text` takes that lookup table and generates new text by randomly selecting new characters according to those frequencies.
+
+Next, we'll make a file called `catgpt_app.py` to serve as our Flask app. Flask is extremely easy to use; all we need to do (after a `pip install flask`) is the following:
+
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+if __name__ == '__main__':
+    app.run('localhost', debug=True)
+```
+
+Easy. Now when `catgpt_app.py` is run, it will run as a Flask app locally at the address `localhost`. You can also specify a port if you'd like (I believe the default is 5000). We'll need to be more careful about this when we deploy to a cloud service, but for now this is all we need for our app to run on our machine.
+
+Now we need to make it do something. We'll take the logic from our `run_catgpt` function from last time (which contains the logic for interacting with the bot and going back and forth) and more or less copy it over to a new function called `app_response`. This will be the function we want called when the user makes a request, and we'll make it work by adding an app route and using the `request` function from Flask. Our app should now look like this:
+
+```python
+from flask import Flask, request
+
+from catgpt_utils import load_wiki, build_lookup, generate_text
+
+app = Flask(__name__)
+
+@app.route('/generate-response', methods=['POST'])
+def app_response():
+    input_text = request.data.decode('utf-8')
+    # some code to process the text and generate a 'response'...
+    return response
+
+if __name__ == '__main__':
+    app.run('localhost', debug=True)
+```
+
+You can check out the source code on GitHub to see the specific implementation of `app_response`, but it really is just porting the logic over from what we wrote in [part 1](/posts/catGPT/index.qmd).
+
+One issue we need to resolve is that we don't want our app re-scraping Wikipedia and rebuilding the lookup table every time a user requests a response. We'll move these tasks to a different function, called `initialize_app`, and make sure to run it before calling `app.run`. Also, there are certain variables that need to be declared as global so that we can use them in `app_response` without passing them as arguments.[^1] We'll also go ahead and install `flask-cors` to enable [Cross-Origin Resource Sharing](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing).[^2]
+
+[^1]: I am positive this is not the best solution, but it passes the only test I care about: it works. A much better solution would probably be to make these variables members of that class we never made, and learn how to use Flask to move data around properly.
+[^2]: I don't know if this is needed or, frankly, what it really is. But I saw a tutorial say to do it, so that's good enough for now.
+
+```python
+from flask import Flask, request
+from flask_cors import CORS
+
+from catgpt_utils import load_wiki, build_lookup, generate_text
+
+app = Flask(__name__)
+CORS(app)
+
+source_text = None
+stops = None
+lookup = None
+
+def initialize_app():
+    print('Initializing app')
+    global source_text
+    global stops
+    global lookup
+
+    # initialize these variables via calls to load_wiki and build_lookup...
+
+@app.route('/generate-response', methods=['POST'])
+def app_response():
+    global source_text
+    global stops
+    global lookup
+
+    input_text = request.data.decode('utf-8')
+    # some code to process the text and generate a 'response'...
+    return response
+
+if __name__ == '__main__':
+    initialize_app()
+    app.run('localhost', debug=True)
+```
+
+Again, for more details you can check out the full code on GitHub. Let's move on to the frontend.
+
+## The Frontend: JavaScript for the New and Naive
+
+At this point I have a confession to make. For years I have been strictly a Python developer, primarily because my Ph.D. work involves protoyping new numerical methods, and a lot of the scientific computing ecosystem has been built around Python. I did technically get a computer science degree, in which I made a lot of apps, gadgets, and goofy projects in Java, C++, and C, but those feel kind of like distant memories. And somehow I've managed to avoid doing any web development, so my HTML/CSS and especially JavaScript knowledge is very rudimentary. So to tackle this project, I did what any self-respecting 2023 software developer would do: I asked ChatGPT for help.
+
