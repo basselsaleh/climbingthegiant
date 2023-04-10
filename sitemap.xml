@@ -1,35 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://basselsaleh.github.io/climbingthegiant/posts/catGPT/index.html</loc>
+    <lastmod>2023-04-10T20:13:04.328Z</lastmod>
+  </url>
+  <url>
     <loc>https://basselsaleh.github.io/climbingthegiant/posts/physics-time-loops/index.html</loc>
-    <lastmod>2023-03-04T20:02:54.831Z</lastmod>
+    <lastmod>2023-04-10T20:13:04.809Z</lastmod>
+  </url>
+  <url>
+    <loc>https://basselsaleh.github.io/climbingthegiant/posts/sentient_3/index.html</loc>
+    <lastmod>2023-04-10T20:13:05.195Z</lastmod>
   </url>
   <url>
     <loc>https://basselsaleh.github.io/climbingthegiant/posts/not-knowing/2021-05-09-not-knowing.html</loc>
-    <lastmod>2023-03-04T20:02:55.031Z</lastmod>
+    <lastmod>2023-04-10T20:13:05.522Z</lastmod>
   </url>
   <url>
-    <loc>https://basselsaleh.github.io/climbingthegiant/posts/catGPT/index.html</loc>
-    <lastmod>2023-03-04T20:02:55.331Z</lastmod>
-  </url>
-  <url>
-    <loc>https://basselsaleh.github.io/climbingthegiant/about.html</loc>
-    <lastmod>2023-03-04T20:02:55.511Z</lastmod>
-  </url>
-  <url>
-    <loc>https://basselsaleh.github.io/climbingthegiant/posts_hidden/welcome/index.html</loc>
-    <lastmod>2023-03-04T20:02:55.681Z</lastmod>
-  </url>
-  <url>
-    <loc>https://basselsaleh.github.io/climbingthegiant/posts_hidden/first-post/2021-05-03-first-post.html</loc>
-    <lastmod>2023-03-04T20:02:55.861Z</lastmod>
+    <loc>https://basselsaleh.github.io/climbingthegiant/posts_hidden/catGPT_pt2/index.html</loc>
+    <lastmod>2023-04-10T20:13:05.874Z</lastmod>
   </url>
   <url>
     <loc>https://basselsaleh.github.io/climbingthegiant/posts_hidden/post-with-code/index.html</loc>
-    <lastmod>2023-03-04T20:02:56.031Z</lastmod>
+    <lastmod>2023-04-10T20:13:06.161Z</lastmod>
+  </url>
+  <url>
+    <loc>https://basselsaleh.github.io/climbingthegiant/posts_hidden/welcome/index.html</loc>
+    <lastmod>2023-04-10T20:13:06.432Z</lastmod>
+  </url>
+  <url>
+    <loc>https://basselsaleh.github.io/climbingthegiant/posts_hidden/first-post/2021-05-03-first-post.html</loc>
+    <lastmod>2023-04-10T20:13:06.730Z</lastmod>
   </url>
   <url>
     <loc>https://basselsaleh.github.io/climbingthegiant/index.html</loc>
-    <lastmod>2023-03-04T20:02:56.231Z</lastmod>
+    <lastmod>2023-04-10T20:13:07.056Z</lastmod>
+  </url>
+  <url>
+    <loc>https://basselsaleh.github.io/climbingthegiant/about.html</loc>
+    <lastmod>2023-04-10T20:13:07.360Z</lastmod>
   </url>
 </urlset>
