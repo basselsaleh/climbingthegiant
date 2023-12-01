@@ -2,7 +2,9 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/bar_chart_race/index.html",
       "/posts/sentient_3/index.html",
+      "/posts/catGPT_pt2/index.html",
       "/posts/physics-time-loops/index.html",
       "/posts/catGPT/index.html",
       "/posts/not-knowing/2021-05-09-not-knowing.html"

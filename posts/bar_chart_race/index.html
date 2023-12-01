@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Bassel Saleh">
+<meta name="dcterms.date" content="2023-12-01">
+<meta name="description" content="I turned my boring finance spreadsheet into a bar chart race. It’s a hoot.">
+
+<title>climbing the giant - Google Sheets and Bar Chart Races</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../..//images/climber.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">climbing the giant</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/basselsaleh"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/bassel-saleh-5a653bb6/"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/mrbassoule"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Google Sheets and Bar Chart Races</h1>
+                  <div>
+        <div class="description">
+          I turned my boring finance spreadsheet into a bar chart race. It’s a hoot.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Coding Project</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Bassel Saleh </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 1, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="responsible-boredom" class="level2">
+<h2 class="anchored" data-anchor-id="responsible-boredom">Responsible Boredom</h2>
+<p>When I started graduate school five and a half years ago, I decided it would be prudent to keep track of all my expenses. I know there are plenty of financial tools out there with all sorts of fancy features, including ones you can connect to your bank account and automatically track, categorize, and budget, all packed into cute little animated charts. But where’s the fun in that? I didn’t want some app popping up every month telling me I spent 13% more on “hospitality” or some other such category that means nothing to me. I wanted to do the heavy lifting of staring at and transcribing every expense, big and small, and doing the data analysis myself.</p>
+<p>Luckily, I find data entry to be quite soothing. So I started a Google Sheet, and at the end of every month I sat down to document every expense and every source of income, all categorized to my pleasure. And as time went on and the amount of data grew, I started to do so some broader data analyses, including how expenses in each category evolved over time, how my monthly savings flatlined as a function of inflation, how my investments rose and fell, and which categories were the best targets for trying to cut back and save a little more.</p>
+<p>And I’ve kept this up, every single month from September 2018 until now. And while it’s true that the mundane data entry has some therapeutic utility for me, it’s hard to not feel a little bored with it after a while. I started wondering if there were any new angles to this I could exploit for some intellectual stimulation. That’s when I discovered bar chart races.</p>
+<p>You may have seen these things on YouTube, especially if you’re a bit of a history nerd like me. They’re great for showing how quantities change over time in competition with each other, especially quantities that tend to only increase, such as <a href="https://www.youtube.com/watch?v=5RVNsD_WkB8&amp;ab_channel=CityGlobeTour">city populations</a>, <a href="https://www.youtube.com/watch?v=D5bNkdSp4KE&amp;ab_channel=PopStatsPulse">social media usage</a>, and <a href="https://www.youtube.com/watch?v=rM6XUX8wrB0&amp;ab_channel=CaptainGizmo">the richest people in the world</a>. I always wondered how people made these things, so I looked into it and discovered <a href="https://app.flourish.studio/@flourish/bar-chart-race">Flourish</a>.</p>
+</section>
+<section id="racing-restaurants-but-how" class="level2">
+<h2 class="anchored" data-anchor-id="racing-restaurants-but-how">Racing Restaurants… but how?</h2>
+<p>I decided making a bar chart race for the money I’ve spent eating out at different restaurants over the years would be fun. However, it would take a little bit of work to get my financial data in the correct format requested by Flourish. The example they have on their website is:</p>
+<p><img src="data_example.png" class="img-fluid"></p>
+<p>The image URL and categories are optional, but the important bit is how the subsequent columns show the accumulated totals for each “team” over time. In my case, the teams need to be restaurants, the “time” columns need to be months, and the values in those columns need to be the cumulative amount of money I’ve spent at each restaurant by that point in time. In my finance spreadsheet, all of this information is pretty spread out. I have a separate sheet for every month, and each one has a bunch of extra information in it but includes something like:</p>
+<p><img src="food_expense_example.png" class="img-fluid"></p>
+<p>Thankfully, this bit of the sheet is in the same place across all months, so by identifying the correct data range, I can extract them all using the same script. But accessing the sheets efficiently is a bit of an issue. I considered downloading the whole thing as an Excel document, but that seemed clunky, both because the conversion to Excel screws up some of the formatting and because I wouldn’t be able to easily update the bar chart race as I add to the Google Sheet over time. I concluded that this could be an opportunity to learn how to use the Google Sheets API, so that is the route I went instead.</p>
+<p>The setup, as it turned out, is pretty simple. You can go to the <a href="https://console.developers.google.com/">Google Developers Console</a>, create a new project, and then enable the Google Sheets API from the API Library in the sidebar. Then, you create some credentials via the following steps:</p>
+<ol type="1">
+<li>In the project dashboard, navigate to the “Credentials” page.</li>
+<li>Click “Create Credentials” and select “Service Account”</li>
+<li>Follow the steps to set up the service account and assign it a “Viewer” role</li>
+<li>In the service account details page, go to “Keys” and create a new key of the “JSON” type. This will download a JSON file with the credentials you’ll need to access the API, so save it somewhere secure.</li>
+<li>Finally, go to the Google Sheet you want to access, click “Share”, and add the email address associated with the service account, which you can find in the JSON file you just downloaded.</li>
+</ol>
+<p>And that’s pretty much it for the API setup. Now you just have to install the Google Client Library in whatever Python environment you want to work in, which you can do via</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> google-api-python-client google-auth-httplib2 google-auth-oauthlib</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>With that, we’re ready to start coding.</p>
+</section>
+<section id="the-code" class="level2">
+<h2 class="anchored" data-anchor-id="the-code">The Code</h2>
+<p>From a code perspective, this project turned out to be quite simple in the end. It was mostly an exercise in dataframe manipulation in <code>pandas</code>, and of course it required learning how to use the Sheets API credentials that we just set up. The code for setting up the imports and the permissions etc. is:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> googleapiclient.discovery <span class="im">import</span> build</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.oauth2.service_account <span class="im">import</span> Credentials</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>SCOPES <span class="op">=</span> [<span class="st">'https://www.googleapis.com/auth/spreadsheets.readonly'</span>]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>SERVICE_ACCOUNT_FILE <span class="op">=</span> <span class="st">'/path/to/credentials.json'</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>creds <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>creds <span class="op">=</span> Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes<span class="op">=</span>SCOPES)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>SPREADSHEET_ID <span class="op">=</span> <span class="st">'your_spreadsheet_id'</span> <span class="co"># this can be found in the url of your Google Sheets document</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>service <span class="op">=</span> build(<span class="st">'sheets'</span>, <span class="st">'v4'</span>, credentials<span class="op">=</span>creds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now, <code>service</code> gives us access to the appropriate Google Sheets document associated with <code>SPREADSHEET_ID</code>. The rest of the code is short enough that I’ll just paste it in its entirety here:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> process_month(month, last_month, master_df):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get data from the sheet</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    sheet <span class="op">=</span> service.spreadsheets()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> sheet.values().get(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        spreadsheetId<span class="op">=</span>SPREADSHEET_ID,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">range</span><span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>month<span class="sc">}</span><span class="ss">!E4:F'</span> <span class="co"># E4:F is the range of data for my "Food" category as pictured above</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    ).execute()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    values <span class="op">=</span> result.get(<span class="st">'values'</span>, [])</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># clean up the data</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    values_df <span class="op">=</span> pd.DataFrame(values)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    values_df.columns <span class="op">=</span> values_df.iloc[<span class="dv">0</span>]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    values_df <span class="op">=</span> values_df[<span class="dv">1</span>:]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    values_df.rename(columns<span class="op">=</span>{<span class="st">'Food'</span>: <span class="st">'Place'</span>, <span class="va">None</span>: <span class="st">'Amount'</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    values_df <span class="op">=</span> values_df.dropna(subset<span class="op">=</span>[<span class="st">'Amount'</span>])</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    values_df.Amount <span class="op">=</span> values_df.Amount.<span class="bu">apply</span>(<span class="kw">lambda</span> acnt: <span class="bu">float</span>(acnt[<span class="dv">4</span>:<span class="op">-</span><span class="dv">1</span>]))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># collapse repeats</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    values_df <span class="op">=</span> values_df.groupby(<span class="st">'Place'</span>)[<span class="st">'Amount'</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># merge the values to the master_df and add the new month</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    merged_df <span class="op">=</span> pd.merge(master_df, values_df, on<span class="op">=</span><span class="st">'Place'</span>, how<span class="op">=</span><span class="st">'outer'</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    merged_df.fillna(<span class="dv">0</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> last_month <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        last_month <span class="op">=</span> <span class="st">'Initial_Amount'</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    merged_df[month] <span class="op">=</span> merged_df[last_month] <span class="op">+</span> merged_df[<span class="st">'Amount'</span>]</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    merged_df.drop([<span class="st">'Amount'</span>], axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> merged_df</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: the names of the sheets in my document consist of the abbreviated month and then the year, so "Sep. 18", "Mar. 22", "Aug. 23", e.g.</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>month_names <span class="op">=</span> [<span class="st">'Jan.'</span>, <span class="st">'Feb.'</span>, <span class="st">'Mar.'</span>, <span class="st">'Apr.'</span>, <span class="st">'May'</span>, <span class="st">'Jun.'</span>, <span class="st">'Jul.'</span>, <span class="st">'Aug.'</span>, <span class="st">'Sep.'</span>, <span class="st">'Oct.'</span>, <span class="st">'Nov.'</span>, <span class="st">'Dec.'</span>]</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>years <span class="op">=</span> [<span class="st">'18'</span>, <span class="st">'19'</span>, <span class="st">'20'</span>, <span class="st">'21'</span>, <span class="st">'22'</span>, <span class="st">'23'</span>]</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>months <span class="op">=</span> []</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> year <span class="kw">in</span> years:</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> month <span class="kw">in</span> month_names:</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>        months.append(<span class="ss">f'</span><span class="sc">{</span>month<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>year<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co"># trim the months to represent the range [Sep. 18, Nov. 23] and prepend a None for easier indexing</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>months <span class="op">=</span> months[<span class="dv">8</span>:<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>months.insert(<span class="dv">0</span>, <span class="va">None</span>)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>master_df <span class="op">=</span> pd.DataFrame({<span class="st">'Place'</span>: [], <span class="st">'Initial_Amount'</span>: []})</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i,month <span class="kw">in</span> tqdm(<span class="bu">enumerate</span>(months[<span class="dv">1</span>:]), total<span class="op">=</span><span class="bu">len</span>(months)):</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    master_df <span class="op">=</span> process_month(month, months[i], master_df)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>master_df.drop([<span class="st">'Initial_Amount'</span>], axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>master_df.to_csv(<span class="st">'food.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Most of the code is self-explanatory, but I’ll quickly go over what the <code>process_month</code> function is doing, step-by-step:</p>
+<ol type="1">
+<li>We extract the values from the appropriate range in the sheet specified by <code>month</code>.</li>
+<li>The values are returned as a list of lists, which isn’t very useful for data manipulation, so we convert it to a <code>pandas</code> dataframe.</li>
+<li>We clean up the data in a few simple ways:
+<ul>
+<li>Identify the first row as column names and cut those entries from the data.</li>
+<li>Rename the columns to “Place” and “Amount” for convenience (and because the numerial column name was previously <code>None</code>).</li>
+<li>Drop all the entries that have <code>NaN</code> or <code>None</code>. This handles a corner case where there might be some empty cells getting read.</li>
+<li>Use the <code>apply</code> function to convert values in the “Amount” column from accounting strings like <code>"$ (4.33)"</code> to floats like <code>4.33</code>.</li>
+</ul></li>
+<li>Now for the real work. We use <code>groupby</code> to collapse repeated place names, while summing the corresponding amounts to give the total amount spent that month at that place. We then merge the new dataframe with the provided <code>master_df</code> (which is initially empty when the function is first called) and replace the missing <code>NaN</code> entries with zeros.</li>
+<li>Finally, we add a new column to the merged dataframe representing the current month, whose value is the sum of whatever was there last month and whatever is found in “Amount” this month. We then drop the “Amount” column and return the merged dataframe as the new master.</li>
+</ol>
+<p>Ok let’s take a breath. The beauty of <code>pandas</code> is that all of that can be done with just a few lines of code, and it works beautifully. Every time we call process month, it will return a dataframe that has added any new restaurants that didn’t appear before, as well as a new column for the given month whose values are the cumulative totals spent at each restaurant. As is often the case with <code>pandas</code>, finding the steps that work best is a matter of playing around with some toy dataframes and seeing what happens. The rest of the code is just setting up the month names (which are the sheet names in the document), iterating through the months to get the final master dataframe, and then saving the result to a <code>.csv</code> format that we can upload into Flourish.</p>
+</section>
+<section id="the-result" class="level2">
+<h2 class="anchored" data-anchor-id="the-result">The Result</h2>
+<p>After all of that, we get the final result. I hope it’s as pleasing to watch for you as it is for me. It probably isn’t, but whatever, I learned some stuff, and that’s the whole idea at the end of the day.</p>
+<div class="flourish-embed flourish-bar-chart-race" data-src="visualisation/15959847">
+<script src="https://public.flourish.studio/resources/embed.js"></script>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
